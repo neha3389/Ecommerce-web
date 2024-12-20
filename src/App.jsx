@@ -1,29 +1,39 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import { useDispatch, useSelector } from 'react-redux'
-import { getQuotes } from './slice/quoteSlice'
+import "./App.css";
+import { useDispatch, useSelector } from "react-redux";
+import { getQuoteById, getQuotes } from "./slice/quoteSlice";
+import { useState } from "react";
 
 function App() {
-  const quotesState = useSelector((state) => state.quotes)
-  const dispatch =useDispatch();
+  const quotesState = useSelector((state) => state.quotes);
 
-  function handledButtonClick(){
+  const [quoteId, setQuoteId] = useState(0);
+
+  const dispatch = useDispatch();
+
+  function handleButtonClick() {
     dispatch(getQuotes());
   }
 
+  function handleFormSubmit(e) {
+    // preventing default behaviour of form submit
+    e.preventDefault();
+    // dispatch
+    dispatch(getQuoteById(quoteId));
+  }
+
+  console.log(quotesState);
+
   return (
     <>
-    <h1>Simple REact</h1>
-    <button onClick={()=> handledButtonClick()}>Quotes</button>
-    {quotesState.quotes.map((q)=> {
-      return<li key={q.id}>{q.quote}</li>;
-    })}
-      
+      <h1>Simple react app</h1>
 
+      <form onSubmit={(e) => handleFormSubmit(e)}>
+        <input type="text" onChange={(e) => setQuoteId(e.target.value)} />
+
+        <button>Get quote with id</button>
+      </form>
     </>
   );
 }
 
-export default App
+export default App;
